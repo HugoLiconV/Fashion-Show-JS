@@ -1,10 +1,3 @@
-# Level Up Tutorials JavaScript Testing 101
-
-## Help Support
-
-https://www.leveluptutorials.com/store
-
-## How To Use
 
 ```
 git clone https://github.com/stolinski/Level-Up-JavaScript-Testing-101.git
