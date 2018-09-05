@@ -1,9 +1,16 @@
+# CodeJam - Fashion Show
+Solution for Fashion Show using Javascript.
+
+## Installation
+```
+git clone https://github.com/HugoLiconV/Fashion-Show-JS.git
+cd Fashion-Show-JS
+npm install
+```
+
+## Execute 
 
 ```
-git clone https://github.com/stolinski/Level-Up-JavaScript-Testing-101.git
-cd Level-Up-JavaScript-Testing-101
-npm install
+npm start
 npm test
 ```
-
-Then follow along on Youtube
