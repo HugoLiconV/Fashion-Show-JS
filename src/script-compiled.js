@@ -1,10 +1,22 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var fs = require("fs");
+var lines = fs.readFileSync("./inputs/D-small-practice.in", "utf8").split("\n");
+var outputFilePath = './output.txt';
+var numberOfCases = parseInt(lines.shift());
+
+var grid = void 0;
+var gridSize = void 0;
+var fashionPoints = void 0;
+var modifications = new Array();
+var results = void 0;
+var modelsInGrid = void 0;
 
 /* ------ FAHION SHOW ------ */
 var testGrid = exports.testGrid = [['+', '.', '.'], ['+', '.', 'o'], ['x', '.', '.']];
@@ -126,22 +138,23 @@ var solveBishops = exports.solveBishops = function solveBishops(_grid) {
 			}
 		}
 	}
-	var isFinished = true;
 	var i = gridSize - 1;
 	while (i >= 0) {
 		var _j = gridSize - 1;
 		while (_j >= 0) {
 			var _cell = grid[i][_j];
 			if (_cell === '.') {
+				// console.log(`[${i} ${j}]`);
 				grid[i][_j] = '+';
 				getDiagonals(i, _j, gridSize, grid);
-				_j = 0;
+				_j = gridSize - 1;
 				i = gridSize - 1;
 			}
 			_j--;
 		}
 		i--;
 	}
+	grid;
 	return grid;
 };
 
@@ -182,7 +195,7 @@ var solveRooks = exports.solveRooks = function solveRooks(_grid) {
 	return grid;
 };
 
-var mergeGrids = exports.mergeGrids = function mergeGrids(solvedRoocks, solveBishop) {
+var mergeGrids = exports.mergeGrids = function mergeGrids(solvedRoocks, solveBishop, grid) {
 	var length = solvedRoocks.length;
 	var mergedGrid = Array(length).fill().map(function () {
 		return Array(length).fill();
@@ -192,11 +205,23 @@ var mergeGrids = exports.mergeGrids = function mergeGrids(solvedRoocks, solveBis
 			var roockCell = solvedRoocks[i][j];
 			var bishopCell = solveBishop[i][j];
 			if (roockCell === '.' && bishopCell === '+') {
+				fashionPoints++;
 				mergedGrid[i][j] = bishopCell;
+				if (mergedGrid[i][j] !== grid[i][j]) {
+					modifications.push(bishopCell + " " + (i + 1) + " " + (j + 1));
+				}
 			} else if (roockCell === 'x' && bishopCell !== '+') {
 				mergedGrid[i][j] = roockCell;
+				fashionPoints++;
+				if (mergedGrid[i][j] !== grid[i][j]) {
+					modifications.push(roockCell + " " + (i + 1) + " " + (j + 1));
+				}
 			} else if (roockCell === 'x' && bishopCell === '+') {
 				mergedGrid[i][j] = 'o';
+				if (mergedGrid[i][j] !== grid[i][j]) {
+					modifications.push("o " + (i + 1) + " " + (j + 1));
+				}
+				fashionPoints += 2;
 			} else {
 				mergedGrid[i][j] = '.';
 			}
@@ -204,15 +229,75 @@ var mergeGrids = exports.mergeGrids = function mergeGrids(solvedRoocks, solveBis
 	}
 	return mergedGrid;
 };
+
+function cleanOutputFile() {
+	fs.writeFile(outputFilePath, '', function (err) {
+		if (err) throw err;
+	});
+}
+
 var fashionShow = exports.fashionShow = function fashionShow() {
-	var bishops = getBishops(testGrid);
-	var roocks = getRooks(testGrid);
-	var solvedRoocks = solveRooks(roocks);
-	var solveBishop = solveBishops(bishops);
-	var mergedGrid = mergeGrids(solvedRoocks, solveBishop);
-	console.log('------RESULT-----');
-	console.log(mergedGrid);
-	return mergedGrid;
+	cleanOutputFile();
+	for (var i = 0; i < numberOfCases; i++) {
+		grid = new Array();
+		var line = lines.shift().split(' ');
+		fashionPoints = 0;
+		modifications = new Array();
+		results = new Array();
+		gridSize = parseInt(line[0]);
+		modelsInGrid = parseInt(line[1]);
+
+		grid = Array(gridSize).fill().map(function () {
+			return Array(gridSize).fill('.');
+		});
+		for (var _i3 = 0; _i3 < modelsInGrid; _i3++) {
+			var _line = lines.shift().split(' ');
+			var figure = _line.shift();
+			var x = _line.shift();
+			var y = _line.shift();
+			grid[x - 1][y - 1] = figure;
+		}
+		var bishops = getBishops(grid);
+		var roocks = getRooks(grid);
+		var solvedRoocks = solveRooks(roocks);
+		solvedRoocks;
+		var solvedBishop = solveBishops(bishops);
+		var mergedGrid = mergeGrids(solvedRoocks, solvedBishop, grid);
+		// console.log('------RESULT-----');
+		// console.log(mergedGrid);
+		// console.log(`Case #${(i + 1)}: ${fashionPoints} ${modifications.length}\n`)
+		fs.appendFile(outputFilePath, "Case #" + (i + 1) + ": " + fashionPoints + " " + modifications.length + "\n", function (err) {
+			if (err) throw err;
+		});
+		modifications.reverse();
+		var _iteratorNormalCompletion = true;
+		var _didIteratorError = false;
+		var _iteratorError = undefined;
+
+		try {
+			for (var _iterator = modifications[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+				var modification = _step.value;
+
+				fs.appendFile(outputFilePath, modification + "\n", function (err) {
+					if (err) throw err;
+				});
+			}
+		} catch (err) {
+			_didIteratorError = true;
+			_iteratorError = err;
+		} finally {
+			try {
+				if (!_iteratorNormalCompletion && _iterator.return) {
+					_iterator.return();
+				}
+			} finally {
+				if (_didIteratorError) {
+					throw _iteratorError;
+				}
+			}
+		}
+	}
+	// return mergedGrid;
 };
 
 fashionShow();
