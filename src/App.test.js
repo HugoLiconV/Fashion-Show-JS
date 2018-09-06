@@ -53,10 +53,10 @@ describe('firstNotRepeatingCharacter', () => {
 		expect(solveRooks(rooksGrid)).toEqual(result);
   });
 
-	it('should get Diagonal', () => {
-		expect(getDiagonals(0,0,4)).toEqual([[0,0]]);
-		expect(getDiagonals(1,3,4)).toEqual([[3,0], [2,1], [1,2], [0,3]]);
-	});
+	// it('should get Diagonal', () => {
+	// 	expect(getDiagonals(0,0,4)).toEqual([[0,0]]);
+	// 	expect(getDiagonals(1,3,4)).toEqual([[3,0], [2,1], [1,2], [0,3]]);
+	// });
 });
 
 // desc→	describe
