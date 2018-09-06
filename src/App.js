@@ -58,18 +58,20 @@ export const getDiagonals = (row, col, length) => {
 	// }
 	let bRow = row;
 	let bCol = col;
-	const sum = Math.abs(bRow + bCol);
-	sum
-	if (bRow <= bCol) {
-		bRow = 0;
-		bCol = sum;
+	let repeticiones = length - (Math.abs(length - (bRow + bCol + 1)));
+	const suma = bRow + bCol;
+	if (suma < 5) {
+		const resta = (length - 1) - bCol;
+		bRow = suma;
+		bCol = 0
 	} else {
-		bRow = sum;
-		bCol = 0;
+		const resta = (length - 1) - bRow;
+		bRow += resta
+		bCol -= resta;
 	}
-	const max = Math.max(bRow, bCol);
-	for(let i = 0; i < (length - max) ; i++){
-		console.log(`${bRow + i} ${bCol + i}`);
+	
+	for(let i = 0; i < repeticiones ; i++){
+		console.log(`[${bRow - (bCol + i)},${bCol + i}]`);
 	}
 }
 
@@ -77,7 +79,7 @@ export const getDiagonals = (row, col, length) => {
 export const solveBishops = (_grid) => {
 	let grid = _grid.map(row => [...row]);
 	// console.log(grid[1][2])
-	getDiagonals(3, 1, 4);
+	getDiagonals(1, 3, 5);
 	// const length = grid.length;
 	// let columnAvailable = fillRange(0, length - 1);
 	// let rowAvailable = [...columnAvailable];

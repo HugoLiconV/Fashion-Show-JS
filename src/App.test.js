@@ -1,5 +1,5 @@
 import { 
-  fashionShow, testGrid, getBishops, getRooks, solveBioshops, solveRooks
+  fashionShow, testGrid, getBishops, getRooks, solveBishops, solveRooks, getDiagonals
 } from './App'
 
 
@@ -35,7 +35,7 @@ describe('firstNotRepeatingCharacter', () => {
 			['+', '.', '+'],
 			['+', '.', '.'],
 		]
-		expect(solveBioshops(bishopGrid)).toEqual(result);
+		expect(solveBishops(bishopGrid)).toEqual(result);
   });
 
 	it('should solve Rooks', () => {
@@ -54,7 +54,8 @@ describe('firstNotRepeatingCharacter', () => {
   });
 
 	it('should get Diagonal', () => {
-		
+		expect(getDiagonals(0,0,4)).toEqual([[0,0]]);
+		expect(getDiagonals(1,3,4)).toEqual([[3,0], [2,1], [1,2], [0,3]]);
 	});
 });
 
