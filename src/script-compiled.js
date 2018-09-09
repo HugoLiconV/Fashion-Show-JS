@@ -1,14 +1,6 @@
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-exports.removeElemFromArray = removeElemFromArray;
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 var fs = require("fs");
 var lines = fs.readFileSync("./inputs/D-small-practice.in", "utf8").split("\n");
@@ -23,55 +15,55 @@ var results = void 0;
 var modelsInGrid = void 0;
 
 /* ------ FAHION SHOW ------ */
-var testGrid = exports.testGrid = [['+', '.', '.'], ['+', '.', 'o'], ['x', '.', '.']];
+/* export let testGrid = [
+	['+', '.', '.'],
+	['+', '.', 'o'],
+	['x', '.', '.']
+]
 
 // Alfil +
-var getBishops = exports.getBishops = function getBishops(_grid) {
-	var grid = _grid.map(function (row) {
-		return [].concat(_toConsumableArray(row));
-	});
-	var gridSize = grid.length;
-	for (var i = 0; i < gridSize; i++) {
-		for (var j = 0; j < gridSize; j++) {
-			var cell = grid[i][j];
+export const getBishops = (_grid) => {
+	let grid = _grid.map(row => [...row]);
+	let gridSize = grid.length;
+	for (let i = 0; i < gridSize; i++) {
+		for (let j = 0; j < gridSize; j++) {
+			const cell = grid[i][j];
 			if (cell === 'o') {
-				grid[i][j] = '+';
+				grid[i][j] = '+'
 			} else if (cell === 'x') {
 				grid[i][j] = '.';
 			}
 		}
 	}
 	return grid;
-};
+}
 // Torre x
-var getRooks = exports.getRooks = function getRooks(_grid) {
-	var grid = _grid.map(function (row) {
-		return [].concat(_toConsumableArray(row));
-	});
-	var gridSize = grid.length;
-	for (var i = 0; i < gridSize; i++) {
-		for (var j = 0; j < gridSize; j++) {
-			var cell = grid[i][j];
+export const getRooks = (_grid) => {
+	let grid = _grid.map(row => [...row]);
+	let gridSize = grid.length;
+	for (let i = 0; i < gridSize; i++) {
+		for (let j = 0; j < gridSize; j++) {
+			const cell = grid[i][j];
 			if (cell === 'o') {
-				grid[i][j] = 'x';
+				grid[i][j] = 'x'
 			} else if (cell === '+') {
 				grid[i][j] = '.';
 			}
 		}
 	}
 	return grid;
-};
+} */
 
 /** 
  * Get Diagonals in a N x N Matrix
  */
-var getDiagonals = exports.getDiagonals = function getDiagonals(row, col, length, grid) {
+/* export const getDiagonals = (row, col, length, grid) => {
 	// let grid = _grid.map(row => [...row]);
 
 	function clockWiseDiagonal() {
-		var bRow = row;
-		var bCol = col;
-		var sum = Math.abs(bRow - bCol);
+		let bRow = row;
+		let bCol = col;
+		const sum = Math.abs(bRow - bCol);
 		if (bRow <= bCol) {
 			bRow = 0;
 			bCol = sum;
@@ -79,11 +71,11 @@ var getDiagonals = exports.getDiagonals = function getDiagonals(row, col, length
 			bRow = sum;
 			bCol = 0;
 		}
-		var max = Math.max(bRow, bCol);
-		for (var i = 0; i < length - max; i++) {
+		const max = Math.max(bRow, bCol);
+		for (let i = 0; i < (length - max); i++) {
 			// console.log(`${bRow + i} ${bCol + i}`);
-			var tempRow = bRow + i;
-			var tempCol = bCol + i;
+			const tempRow = bRow + i;
+			const tempCol = bCol + i;
 			if (tempRow !== row && tempCol !== col) {
 				grid[tempRow][tempCol] = '-';
 			}
@@ -91,21 +83,21 @@ var getDiagonals = exports.getDiagonals = function getDiagonals(row, col, length
 	}
 
 	function anticlockwise() {
-		var bRow = row;
-		var bCol = col;
-		var repeticiones = length - Math.abs(length - (bRow + bCol + 1));
-		var suma = bRow + bCol;
+		let bRow = row;
+		let bCol = col;
+		let repeticiones = length - (Math.abs(length - (bRow + bCol + 1)));
+		const suma = bRow + bCol;
 		if (suma < length) {
 			bRow = suma;
-			bCol = 0;
+			bCol = 0
 		} else {
-			var resta = length - 1 - bRow;
-			bRow += resta;
+			const resta = (length - 1) - bRow;
+			bRow += resta
 			bCol -= resta;
 		}
-		for (var i = 0; i < repeticiones; i++) {
-			var tempRow = void 0;
-			var tempCol = void 0;
+		for (let i = 0; i < repeticiones; i++) {
+			let tempRow;
+			let tempCol;
 			if (suma < length) {
 				// console.log(`[${bRow - (bCol + i)},${bCol + i}]`);
 				tempRow = bRow - (bCol + i);
@@ -126,40 +118,38 @@ var getDiagonals = exports.getDiagonals = function getDiagonals(row, col, length
 	clockWiseDiagonal();
 	anticlockwise();
 	return grid;
-};
+}
 
 // NO ocupan la misma diagonal
-var solveBishops = exports.solveBishops = function solveBishops(_grid) {
-	var grid = _grid.map(function (row) {
-		return [].concat(_toConsumableArray(row));
-	});
-	var gridSize = grid.length;
-	for (var _i = 0; _i < gridSize; _i++) {
-		for (var j = 0; j < gridSize; j++) {
-			var cell = grid[_i][j];
+export const solveBishops = (_grid) => {
+	let grid = _grid.map(row => [...row]);
+	let gridSize = grid.length;
+	for (let i = 0; i < gridSize; i++) {
+		for (let j = 0; j < gridSize; j++) {
+			const cell = grid[i][j];
 			if (cell === '+') {
-				getDiagonals(_i, j, gridSize, grid);
+				getDiagonals(i, j, gridSize, grid);
 			}
 		}
 	}
-	var i = gridSize - 1;
+	let i = (gridSize - 1);
 	while (i >= 0) {
-		var _j = gridSize - 1;
-		while (_j >= 0) {
-			var _cell = grid[i][_j];
-			if (_cell === '.') {
+		let j = (gridSize - 1);
+		while (j >= 0) {
+			const cell = grid[i][j];
+			if (cell === '.') {
 				// console.log(`[${i} ${j}]`);
-				grid[i][_j] = '+';
-				getDiagonals(i, _j, gridSize, grid);
-				_j = gridSize - 1;
-				i = gridSize - 1;
+				grid[i][j] = '+';
+				getDiagonals(i, j, gridSize, grid);
+				j = (gridSize - 1);
+				i = (gridSize - 1)
 			}
-			_j--;
+			j--;
 		}
 		i--;
 	}
 	return grid;
-};
+} */
 
 var fillRange = function fillRange(start, end) {
 	return Array(end - start + 1).fill().map(function (_, index) {
@@ -167,62 +157,54 @@ var fillRange = function fillRange(start, end) {
 	});
 };
 
-var solveRooks = exports.solveRooks = function solveRooks(_grid) {
-	var grid = _grid.map(function (row) {
-		return [].concat(_toConsumableArray(row));
-	});
-	var length = grid.length;
-	var columnAvailable = fillRange(0, length - 1);
-	var rowAvailable = [].concat(_toConsumableArray(columnAvailable));
+/* export const solveRooks = (_grid) => {
+	let grid = _grid.map(row => [...row]);
+	const length = grid.length;
+	let columnAvailable = fillRange(0, length - 1);
+	let rowAvailable = [...columnAvailable];
 
-	for (var i = 0; i < length; i++) {
-		var row = grid[i];
-		var index = row.indexOf('x');
+	for (let i = 0; i < length; i++) {
+		const row = grid[i];
+		const index = row.indexOf('x')
 		if (index > -1) {
 			rowAvailable[i] = Infinity;
 			columnAvailable[index] = Infinity;
 		}
 	}
-	rowAvailable = rowAvailable.filter(function (val) {
-		return isFinite(val);
-	});
-	columnAvailable = columnAvailable.filter(function (val) {
-		return isFinite(val);
-	});
-	for (var _i2 = 0; _i2 < columnAvailable.length; _i2++) {
-		var j = rowAvailable[_i2];
-		var k = columnAvailable[_i2];
+	rowAvailable = rowAvailable.filter(val => isFinite(val));
+	columnAvailable = columnAvailable.filter(val => isFinite(val));
+	for (let i = 0; i < columnAvailable.length; i++) {
+		const j = rowAvailable[i];
+		const k = columnAvailable[i];
 		grid[j][k] = 'x';
 	}
-	grid;
+	grid
 	return grid;
-};
+}
 
-var mergeGrids = exports.mergeGrids = function mergeGrids(solvedRoocks, solveBishop, grid) {
-	var length = solvedRoocks.length;
-	var mergedGrid = Array(length).fill().map(function () {
-		return Array(length).fill();
-	});
-	for (var i = 0; i < length; i++) {
-		for (var j = 0; j < length; j++) {
-			var roockCell = solvedRoocks[i][j];
-			var bishopCell = solveBishop[i][j];
+export const mergeGrids = (solvedRoocks, solveBishop, grid) => {
+	const length = solvedRoocks.length;
+	const mergedGrid = Array(length).fill().map(() => Array(length).fill())
+	for (let i = 0; i < length; i++) {
+		for (let j = 0; j < length; j++) {
+			const roockCell = solvedRoocks[i][j];
+			const bishopCell = solveBishop[i][j];
 			if (roockCell === '.' && bishopCell === '+') {
 				fashionPoints++;
 				mergedGrid[i][j] = bishopCell;
 				if (mergedGrid[i][j] !== grid[i][j]) {
-					modifications.push(bishopCell + " " + (i + 1) + " " + (j + 1));
+					modifications.push(`${bishopCell} ${i+1} ${j+1}`);
 				}
 			} else if (roockCell === 'x' && bishopCell !== '+') {
 				mergedGrid[i][j] = roockCell;
 				fashionPoints++;
 				if (mergedGrid[i][j] !== grid[i][j]) {
-					modifications.push(roockCell + " " + (i + 1) + " " + (j + 1));
+					modifications.push(`${roockCell} ${i+1} ${j+1}`);
 				}
 			} else if (roockCell === 'x' && bishopCell === '+') {
-				mergedGrid[i][j] = 'o';
+				mergedGrid[i][j] = 'o'
 				if (mergedGrid[i][j] !== grid[i][j]) {
-					modifications.push("o " + (i + 1) + " " + (j + 1));
+					modifications.push(`o ${i+1} ${j+1}`);
 				}
 				fashionPoints += 2;
 			} else {
@@ -230,9 +212,9 @@ var mergeGrids = exports.mergeGrids = function mergeGrids(solvedRoocks, solveBis
 			}
 		}
 	}
-	return mergedGrid;
-};
-
+	return mergedGrid
+}
+ */
 function cleanOutputFile() {
 	fs.writeFile(outputFilePath, '', function (err) {
 		if (err) throw err;
@@ -251,12 +233,12 @@ function zip(a, b) {
 }
 
 function printMatrix(matrix) {
-	matrix.map(function (row) {
-		return console.log(row.toString());
+	matrix.map(function (row, i) {
+		return console.log(i + "\t" + row.toString());
 	});
 }
 
-var fashionShow = exports.fashionShow = function fashionShow() {
+var fashionShow = function fashionShow() {
 	cleanOutputFile();
 
 	var _loop = function _loop(i) {
@@ -279,11 +261,12 @@ var fashionShow = exports.fashionShow = function fashionShow() {
 		});
 		var freeRows = fillRange(0, N - 1);
 		var freeCols = fillRange(0, N - 1);
-		var freePositiveDiag = fillRange(0, 2 * N - 1);
+		var freePositiveDiag = fillRange(0, 2 * N - 2);
 		var freeNegativeDiag = fillRange(-(N - 1), N - 1);
 		var modelsPlaced = new Array();
+		var freeDiag = new Array();
 
-		for (var _i3 = 0; _i3 < M; _i3++) {
+		for (var _i = 0; _i < M; _i++) {
 			var _line2 = lines.shift().split(' ');
 
 			var _line3 = _slicedToArray(_line2, 3),
@@ -340,12 +323,85 @@ var fashionShow = exports.fashionShow = function fashionShow() {
 			}
 		}
 
+		for (var _R2 = 0; _R2 < N; _R2++) {
+			for (var _C2 = 0; _C2 < N; _C2++) {
+				if (!freeDiag.hasOwnProperty(_R2 + _C2)) {
+					freeDiag[_R2 + _C2] = [[_R2, _C2]];
+				} else {
+					var arr = freeDiag[_R2 + _C2];
+					arr.push([_R2, _C2]);
+					freeDiag[_R2 + _C2] = arr;
+				}
+			}
+		}
+
+		var sortedIndex = orderByLength(freeDiag);
+		console.log(sortedIndex.toString());
+		for (var index = 0; index < sortedIndex.length; index++) {
+			var _i2 = sortedIndex[index];
+			var length = freeDiag[_i2].length - 1;
+			if (!freePositiveDiag.includes(_i2)) {
+				continue;
+			}
+			for (var j = length; j >= 0; j--) {
+				var _freeDiag$_i2$j = _slicedToArray(freeDiag[_i2][j], 2),
+				    _R3 = _freeDiag$_i2$j[0],
+				    _C3 = _freeDiag$_i2$j[1];
+
+				console.log("[" + _i2 + ", " + j + "]");
+				if (freeNegativeDiag.includes(_R3 - _C3)) {
+					if (matrix[_R3][_C3] === 'x') {
+						matrix[_R3][_C3] = 'o';
+						if (!containsSubArray(modelsPlaced, [_R3, _C3])) {
+							modelsPlaced.push([_R3, _C3]);
+						}
+					} else if (matrix[_R3][_C3] === '.') {
+						matrix[_R3][_C3] = '+';
+						modelsPlaced.push([_R3, _C3]);
+					}
+					removeElemFromArray(freePositiveDiag, _R3 + _C3);
+					removeElemFromArray(freeNegativeDiag, _R3 - _C3);
+				}
+				break;
+			}
+		}
 		printMatrix(matrix);
 	};
 
 	for (var i = 0; i < 1; i++) {
 		_loop(i);
 	}
+
+	function orderByLength(matrix) {
+		var len = matrix.length;
+		var indices = fillRange(0, len - 1);
+		indices.sort(function (a, b) {
+			var A = matrix[a].length;
+			var B = matrix[b].length;
+			if (A < B) {
+				return -1;
+			} else if (A > B) {
+				return 1;
+			} else {
+				// a must be equal to b
+				if (a < b) {
+					return -1;
+				} else if (a > b) {
+					return 1;
+				}
+			}
+			return 0;
+		});
+		console.log(indices.toString());
+		return indices;
+	}
+
+	function containsSubArray(array, subArray) {
+		return array.some(function (elem) {
+			return elem.toString() === subArray.toString();
+		});
+	}
+	// function
 	// 	let bishops = getBishops(grid);
 	// 	let roocks = getRooks(grid);
 	// 	let solvedRoocks = solveRooks(roocks);
