@@ -1,17 +1,14 @@
 const fs = require("fs");
-const lines = fs.readFileSync("./inputs/D-large-practice.in", "utf8").split("\n");
+const lines = fs.readFileSync("./inputs/D-small-practice.in", "utf8").split("\n");
 const outputFilePath = './output.txt'
 const numberOfCases = parseInt(lines.shift());
-
-// let file = new File(outputFilePath);
-// file.open("w"); // open file with write access
 
 const fillRange = (start, end) => {
 	return Array(end - start + 1).fill().map((_, index) => start + index);
 };
 
-function cleanOutputFile() {
-	fs.writeFile(outputFilePath, '', (err) => {
+function deleteOutputFile() {
+	fs.unlink(outputFilePath, (err) => {
 		if (err) throw err;
 	});
 }
@@ -57,7 +54,7 @@ function containsSubArray(array, subArray) {
 }
 
 const fashionShow = () => {
-	cleanOutputFile();
+	deleteOutputFile();
 	for (let i = 0; i < numberOfCases; i++) {
 		const line = lines.shift().split(' ')
 		let [N, M] = line;
@@ -157,22 +154,7 @@ const fashionShow = () => {
 		fs.appendFile(outputFilePath, results.join(""), (err) => {
 			if (err) throw err;
 		});
-		// file.writeln(`Case #${(i + 1)}: ${fashionPoints} ${modelsPlaced.length}`);
-
-
-		// console.log(`Case #${(i + 1)}: ${fashionPoints} ${modelsPlaced.length}\n`)
-		// fs.appendFile(outputFilePath, `Case #${(i + 1)}: ${fashionPoints} ${modelsPlaced.length}\n`, (err) => {
-		// 	if (err) throw err;
-		// for (let [R, C] of modelsPlaced) {
-		// file.writeln(`${matrix[R][C]} ${R+1} ${C+1}`)
-		// console.log(`${matrix[R][C]} ${R+1} ${C+1}`);
-		// fs.appendFile(outputFilePath, `${matrix[R][C]} ${R+1} ${C+1}\n`, (err) => {
-		// if (err) throw err;
-		// });
-		// }
-		// });
 	}
-	// file.close();
 };
 
 fashionShow();
