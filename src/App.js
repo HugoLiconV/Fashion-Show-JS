@@ -73,7 +73,7 @@ export const getDiagonals = (row, col, length, grid) => {
 			const tempRow = bRow + i;
 			const tempCol = bCol + i;
 			if (tempRow !== row && tempCol !== col) {
-				grid[tempRow][tempCol] = Infinity;
+				grid[tempRow][tempCol] = '-';
 			}
 		}
 	}
@@ -99,14 +99,14 @@ export const getDiagonals = (row, col, length, grid) => {
 				tempRow = bRow - (bCol + i);
 				tempCol = bCol + i;
 				if (tempRow !== row && tempCol !== col) {
-					grid[tempRow][tempCol] = Infinity;
+					grid[tempRow][tempCol] = '-';
 				}
 			} else {
 				// console.log(`[${bRow - i},${bCol + i}]`);
 				tempRow = bRow - i;
 				tempCol = bCol + i;
 				if (tempRow !== row && tempCol !== col) {
-					grid[tempRow][tempCol] = Infinity;
+					grid[tempRow][tempCol] = '-';
 				}
 			}
 		}
@@ -144,7 +144,6 @@ export const solveBishops = (_grid) => {
 		}
 		i--;
 	}
-	grid
 	return grid;
 }
 
@@ -218,7 +217,7 @@ function cleanOutputFile() {
 
 export const fashionShow = () => {
 	cleanOutputFile();
-	for (let i = 0; i < numberOfCases; i++) {
+	for (let i = 0; i < 1; i++) {
 		grid = new Array();
 		const line = lines.shift().split(' ')
 		fashionPoints = 0;
@@ -231,23 +230,41 @@ export const fashionShow = () => {
 		for (let i = 0; i < modelsInGrid; i++) {
 			const line = lines.shift().split(' ');
 			const figure = line.shift();
-			const x = line.shift();
-			const y = line.shift();
-			grid[x - 1][y - 1] = figure;
+			const x = parseInt(line.shift());
+			const y = parseInt(line.shift());
+			grid[(x - 1)][(y - 1)] = figure;
 		}
-		const bishops = getBishops(grid);
-		const roocks = getRooks(grid);
-		const solvedRoocks = solveRooks(roocks);
-		solvedRoocks
-		const solvedBishop = solveBishops(bishops);
-		const mergedGrid = mergeGrids(solvedRoocks, solvedBishop, grid);
-		// console.log('------RESULT-----');
-		// console.log(mergedGrid);
-		// console.log(`Case #${(i + 1)}: ${fashionPoints} ${modifications.length}\n`)
+		let bishops = getBishops(grid);
+		let roocks = getRooks(grid);
+		let solvedRoocks = solveRooks(roocks);
+		let solvedBishop = solveBishops(bishops);
+		console.log('------GRID-----');
+		grid.map(row => {
+			console.log(row.toString());
+		})
+
+
+		console.log('------BISHOP +-----');
+		solvedBishop.map(row => {
+			console.log(row.toString());
+		})
+
+
+		console.log('------ROOCKS X-----');
+		solvedRoocks.map(row => {
+			console.log(row.toString());
+		})
+
+		let mergedGrid = mergeGrids(solvedRoocks, solvedBishop, grid);
+		console.log('------RESULT-----');
+		mergedGrid.map(row => {
+			console.log(row.toString());
+		})
+		console.log(`Case #${(i + 1)}: ${fashionPoints} ${modifications.length}\n`)
 		fs.appendFile(outputFilePath, `Case #${(i + 1)}: ${fashionPoints} ${modifications.length}\n`,  (err) => {
 		  if (err) throw err;
 		});
-		modifications.reverse();
+		// modifications.reverse();
 		for (let modification of modifications) {
 		  fs.appendFile(outputFilePath, `${modification}\n`, (err) => {
 		    if (err) throw err;

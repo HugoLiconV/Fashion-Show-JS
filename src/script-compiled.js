@@ -81,7 +81,7 @@ var getDiagonals = exports.getDiagonals = function getDiagonals(row, col, length
 			var tempRow = bRow + i;
 			var tempCol = bCol + i;
 			if (tempRow !== row && tempCol !== col) {
-				grid[tempRow][tempCol] = Infinity;
+				grid[tempRow][tempCol] = '-';
 			}
 		}
 	}
@@ -107,14 +107,14 @@ var getDiagonals = exports.getDiagonals = function getDiagonals(row, col, length
 				tempRow = bRow - (bCol + i);
 				tempCol = bCol + i;
 				if (tempRow !== row && tempCol !== col) {
-					grid[tempRow][tempCol] = Infinity;
+					grid[tempRow][tempCol] = '-';
 				}
 			} else {
 				// console.log(`[${bRow - i},${bCol + i}]`);
 				tempRow = bRow - i;
 				tempCol = bCol + i;
 				if (tempRow !== row && tempCol !== col) {
-					grid[tempRow][tempCol] = Infinity;
+					grid[tempRow][tempCol] = '-';
 				}
 			}
 		}
@@ -154,7 +154,6 @@ var solveBishops = exports.solveBishops = function solveBishops(_grid) {
 		}
 		i--;
 	}
-	grid;
 	return grid;
 };
 
@@ -238,7 +237,7 @@ function cleanOutputFile() {
 
 var fashionShow = exports.fashionShow = function fashionShow() {
 	cleanOutputFile();
-	for (var i = 0; i < numberOfCases; i++) {
+	for (var i = 0; i < 1; i++) {
 		grid = new Array();
 		var line = lines.shift().split(' ');
 		fashionPoints = 0;
@@ -253,23 +252,39 @@ var fashionShow = exports.fashionShow = function fashionShow() {
 		for (var _i3 = 0; _i3 < modelsInGrid; _i3++) {
 			var _line = lines.shift().split(' ');
 			var figure = _line.shift();
-			var x = _line.shift();
-			var y = _line.shift();
+			var x = parseInt(_line.shift());
+			var y = parseInt(_line.shift());
 			grid[x - 1][y - 1] = figure;
 		}
 		var bishops = getBishops(grid);
 		var roocks = getRooks(grid);
 		var solvedRoocks = solveRooks(roocks);
-		solvedRoocks;
 		var solvedBishop = solveBishops(bishops);
+		console.log('------GRID-----');
+		grid.map(function (row) {
+			console.log(row.toString());
+		});
+
+		console.log('------BISHOP +-----');
+		solvedBishop.map(function (row) {
+			console.log(row.toString());
+		});
+
+		console.log('------ROOCKS X-----');
+		solvedRoocks.map(function (row) {
+			console.log(row.toString());
+		});
+
 		var mergedGrid = mergeGrids(solvedRoocks, solvedBishop, grid);
-		// console.log('------RESULT-----');
-		// console.log(mergedGrid);
-		// console.log(`Case #${(i + 1)}: ${fashionPoints} ${modifications.length}\n`)
+		console.log('------RESULT-----');
+		mergedGrid.map(function (row) {
+			console.log(row.toString());
+		});
+		console.log("Case #" + (i + 1) + ": " + fashionPoints + " " + modifications.length + "\n");
 		fs.appendFile(outputFilePath, "Case #" + (i + 1) + ": " + fashionPoints + " " + modifications.length + "\n", function (err) {
 			if (err) throw err;
 		});
-		modifications.reverse();
+		// modifications.reverse();
 		var _iteratorNormalCompletion = true;
 		var _didIteratorError = false;
 		var _iteratorError = undefined;
