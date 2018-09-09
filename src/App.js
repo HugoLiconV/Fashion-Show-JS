@@ -215,62 +215,105 @@ function cleanOutputFile() {
 	});
 }
 
+
+export function removeElemFromArray(array, elem) {
+	return array.splice(array.indexOf(elem), 1);
+}
+
+function zip(a, b) {
+	let arr = [];
+	for (let key in a) arr.push([a[key], b[key]]);
+	return arr;
+}
+
+function printMatrix(matrix) {
+	matrix.map(row =>console.log(row.toString()));
+}
+
 export const fashionShow = () => {
 	cleanOutputFile();
 	for (let i = 0; i < 1; i++) {
-		grid = new Array();
+		// grid = new Array();
 		const line = lines.shift().split(' ')
+		let [N, M] = line;
+		N = parseInt(N);
+		M = parseInt(M);
 		fashionPoints = 0;
 		modifications = new Array();
 		results = new Array();
-		gridSize = parseInt(line[0])
-		modelsInGrid = parseInt(line[1]);
 
-		grid = Array(gridSize).fill().map(() => Array(gridSize).fill('.'))
-		for (let i = 0; i < modelsInGrid; i++) {
+		// Create the Matrix
+		let matrix = Array(N).fill().map(() => Array(N).fill('.'))
+		let freeRows = fillRange(0, N - 1);
+		let freeCols = fillRange(0, N - 1);
+		let freePositiveDiag = fillRange(0, (2 * N) - 1);
+		let freeNegativeDiag = fillRange(-(N - 1), N - 1);
+		let modelsPlaced = new Array();
+
+		for (let i = 0; i < M; i++) {
 			const line = lines.shift().split(' ');
-			const figure = line.shift();
-			const x = parseInt(line.shift());
-			const y = parseInt(line.shift());
-			grid[(x - 1)][(y - 1)] = figure;
+			let [model, R, C] = line;
+			R = parseInt(R) - 1;
+			C = parseInt(C) - 1;
+			if (model === 'x' || model === 'o') {
+				matrix[R][C] = model;
+				removeElemFromArray(freeRows, R);
+				removeElemFromArray(freeCols, C)
+			}
+			if (model === '+' || model === 'o') {
+				matrix[R][C] = model;
+				removeElemFromArray(freePositiveDiag, (R + C));
+				removeElemFromArray(freeNegativeDiag, (R - C));
+			}
 		}
-		let bishops = getBishops(grid);
-		let roocks = getRooks(grid);
-		let solvedRoocks = solveRooks(roocks);
-		let solvedBishop = solveBishops(bishops);
-		console.log('------GRID-----');
-		grid.map(row => {
-			console.log(row.toString());
-		})
-
-
-		console.log('------BISHOP +-----');
-		solvedBishop.map(row => {
-			console.log(row.toString());
-		})
-
-
-		console.log('------ROOCKS X-----');
-		solvedRoocks.map(row => {
-			console.log(row.toString());
-		})
-
-		let mergedGrid = mergeGrids(solvedRoocks, solvedBishop, grid);
-		console.log('------RESULT-----');
-		mergedGrid.map(row => {
-			console.log(row.toString());
-		})
-		console.log(`Case #${(i + 1)}: ${fashionPoints} ${modifications.length}\n`)
-		fs.appendFile(outputFilePath, `Case #${(i + 1)}: ${fashionPoints} ${modifications.length}\n`,  (err) => {
-		  if (err) throw err;
-		});
-		// modifications.reverse();
-		for (let modification of modifications) {
-		  fs.appendFile(outputFilePath, `${modification}\n`, (err) => {
-		    if (err) throw err;
-		  });
+		for (let [R, C] of zip(freeRows, freeCols)) {
+			if (matrix[R][C] == "+") {
+				matrix[R][C] = "o"
+				modelsPlaced.push([R, C])
+			} else if (matrix[R][C] == ".") {
+				matrix[R][C] = "x"
+				modelsPlaced.push([R, C])
+			}
 		}
+		printMatrix(matrix);
 	}
+	// 	let bishops = getBishops(grid);
+	// 	let roocks = getRooks(grid);
+	// 	let solvedRoocks = solveRooks(roocks);
+	// 	let solvedBishop = solveBishops(bishops);
+	// 	console.log('------GRID-----');
+	// 	grid.map(row => {
+	// 		console.log(row.toString());
+	// 	})
+
+
+	// 	console.log('------BISHOP +-----');
+	// 	solvedBishop.map(row => {
+	// 		console.log(row.toString());
+	// 	})
+
+
+	// 	console.log('------ROOCKS X-----');
+	// 	solvedRoocks.map(row => {
+	// 		console.log(row.toString());
+	// 	})
+
+	// 	let mergedGrid = mergeGrids(solvedRoocks, solvedBishop, grid);
+	// 	console.log('------RESULT-----');
+	// 	mergedGrid.map(row => {
+	// 		console.log(row.toString());
+	// 	})
+	// 	console.log(`Case #${(i + 1)}: ${fashionPoints} ${modifications.length}\n`)
+	// 	fs.appendFile(outputFilePath, `Case #${(i + 1)}: ${fashionPoints} ${modifications.length}\n`,  (err) => {
+	// 	  if (err) throw err;
+	// 	});
+	// 	// modifications.reverse();
+	// 	for (let modification of modifications) {
+	// 	  fs.appendFile(outputFilePath, `${modification}\n`, (err) => {
+	// 	    if (err) throw err;
+	// 	  });
+	// 	}
+	// }
 	// return mergedGrid;
 };
 

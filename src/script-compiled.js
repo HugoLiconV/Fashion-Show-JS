@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+exports.removeElemFromArray = removeElemFromArray;
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 var fs = require("fs");
@@ -235,67 +239,91 @@ function cleanOutputFile() {
 	});
 }
 
+function removeElemFromArray(array, elem) {
+	return array.splice(array.indexOf(elem), 1);
+}
+
+function zip(a, b) {
+	var arr = [];
+	for (var key in a) {
+		arr.push([a[key], b[key]]);
+	}return arr;
+}
+
+function printMatrix(matrix) {
+	matrix.map(function (row) {
+		return console.log(row.toString());
+	});
+}
+
 var fashionShow = exports.fashionShow = function fashionShow() {
 	cleanOutputFile();
-	for (var i = 0; i < 1; i++) {
-		grid = new Array();
+
+	var _loop = function _loop(i) {
+		// grid = new Array();
 		var line = lines.shift().split(' ');
+
+		var _line = _slicedToArray(line, 2),
+		    N = _line[0],
+		    M = _line[1];
+
+		N = parseInt(N);
+		M = parseInt(M);
 		fashionPoints = 0;
 		modifications = new Array();
 		results = new Array();
-		gridSize = parseInt(line[0]);
-		modelsInGrid = parseInt(line[1]);
 
-		grid = Array(gridSize).fill().map(function () {
-			return Array(gridSize).fill('.');
+		// Create the Matrix
+		var matrix = Array(N).fill().map(function () {
+			return Array(N).fill('.');
 		});
-		for (var _i3 = 0; _i3 < modelsInGrid; _i3++) {
-			var _line = lines.shift().split(' ');
-			var figure = _line.shift();
-			var x = parseInt(_line.shift());
-			var y = parseInt(_line.shift());
-			grid[x - 1][y - 1] = figure;
+		var freeRows = fillRange(0, N - 1);
+		var freeCols = fillRange(0, N - 1);
+		var freePositiveDiag = fillRange(0, 2 * N - 1);
+		var freeNegativeDiag = fillRange(-(N - 1), N - 1);
+		var modelsPlaced = new Array();
+
+		for (var _i3 = 0; _i3 < M; _i3++) {
+			var _line2 = lines.shift().split(' ');
+
+			var _line3 = _slicedToArray(_line2, 3),
+			    model = _line3[0],
+			    R = _line3[1],
+			    C = _line3[2];
+
+			R = parseInt(R) - 1;
+			C = parseInt(C) - 1;
+			if (model === 'x' || model === 'o') {
+				matrix[R][C] = model;
+				removeElemFromArray(freeRows, R);
+				removeElemFromArray(freeCols, C);
+			}
+			if (model === '+' || model === 'o') {
+				matrix[R][C] = model;
+				removeElemFromArray(freePositiveDiag, R + C);
+				removeElemFromArray(freeNegativeDiag, R - C);
+			}
 		}
-		var bishops = getBishops(grid);
-		var roocks = getRooks(grid);
-		var solvedRoocks = solveRooks(roocks);
-		var solvedBishop = solveBishops(bishops);
-		console.log('------GRID-----');
-		grid.map(function (row) {
-			console.log(row.toString());
-		});
-
-		console.log('------BISHOP +-----');
-		solvedBishop.map(function (row) {
-			console.log(row.toString());
-		});
-
-		console.log('------ROOCKS X-----');
-		solvedRoocks.map(function (row) {
-			console.log(row.toString());
-		});
-
-		var mergedGrid = mergeGrids(solvedRoocks, solvedBishop, grid);
-		console.log('------RESULT-----');
-		mergedGrid.map(function (row) {
-			console.log(row.toString());
-		});
-		console.log("Case #" + (i + 1) + ": " + fashionPoints + " " + modifications.length + "\n");
-		fs.appendFile(outputFilePath, "Case #" + (i + 1) + ": " + fashionPoints + " " + modifications.length + "\n", function (err) {
-			if (err) throw err;
-		});
-		// modifications.reverse();
 		var _iteratorNormalCompletion = true;
 		var _didIteratorError = false;
 		var _iteratorError = undefined;
 
 		try {
-			for (var _iterator = modifications[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-				var modification = _step.value;
+			for (var _iterator = zip(freeRows, freeCols)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+				var _ref = _step.value;
 
-				fs.appendFile(outputFilePath, modification + "\n", function (err) {
-					if (err) throw err;
-				});
+				var _ref2 = _slicedToArray(_ref, 2);
+
+				var _R = _ref2[0];
+				var _C = _ref2[1];
+
+				if (matrix[_R][_C] == "+") {
+					matrix[_R][_C] = "o";
+					modelsPlaced.push([_R, _C]);
+				} else if (matrix[_R][_C] == ".") {
+					matrix[_R][_C] = "x";
+					modelsPlaced.push([_R, _C]);
+				}
 			}
 		} catch (err) {
 			_didIteratorError = true;
@@ -311,7 +339,50 @@ var fashionShow = exports.fashionShow = function fashionShow() {
 				}
 			}
 		}
+
+		printMatrix(matrix);
+	};
+
+	for (var i = 0; i < 1; i++) {
+		_loop(i);
 	}
+	// 	let bishops = getBishops(grid);
+	// 	let roocks = getRooks(grid);
+	// 	let solvedRoocks = solveRooks(roocks);
+	// 	let solvedBishop = solveBishops(bishops);
+	// 	console.log('------GRID-----');
+	// 	grid.map(row => {
+	// 		console.log(row.toString());
+	// 	})
+
+
+	// 	console.log('------BISHOP +-----');
+	// 	solvedBishop.map(row => {
+	// 		console.log(row.toString());
+	// 	})
+
+
+	// 	console.log('------ROOCKS X-----');
+	// 	solvedRoocks.map(row => {
+	// 		console.log(row.toString());
+	// 	})
+
+	// 	let mergedGrid = mergeGrids(solvedRoocks, solvedBishop, grid);
+	// 	console.log('------RESULT-----');
+	// 	mergedGrid.map(row => {
+	// 		console.log(row.toString());
+	// 	})
+	// 	console.log(`Case #${(i + 1)}: ${fashionPoints} ${modifications.length}\n`)
+	// 	fs.appendFile(outputFilePath, `Case #${(i + 1)}: ${fashionPoints} ${modifications.length}\n`,  (err) => {
+	// 	  if (err) throw err;
+	// 	});
+	// 	// modifications.reverse();
+	// 	for (let modification of modifications) {
+	// 	  fs.appendFile(outputFilePath, `${modification}\n`, (err) => {
+	// 	    if (err) throw err;
+	// 	  });
+	// 	}
+	// }
 	// return mergedGrid;
 };
 
