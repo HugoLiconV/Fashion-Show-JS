@@ -9,7 +9,7 @@ const fillRange = (start, end) => {
 
 function deleteOutputFile() {
 	fs.unlink(outputFilePath, (err) => {
-		if (err) throw err;
+		if (err) throw `Run the program again ${err}`;
 	});
 }
 
@@ -30,7 +30,7 @@ function printMatrix(matrix) {
 function orderByLength(matrix) {
 	const len = matrix.length;
 	let indices = fillRange(0, len - 1);
-	indices.sort(function (a, b) {
+	return indices.sort(function (a, b) {
 		const A = matrix[a].length;
 		const B = matrix[b].length;
 		if (A < B) {
@@ -46,11 +46,17 @@ function orderByLength(matrix) {
 		}
 		return 0;
 	});
-	return indices;
 }
 
 function containsSubArray(array, subArray) {
 	return array.some(elem => elem.toString() === subArray.toString())
+}
+
+function createMatrix(N, fill) {
+	if (fill.length === 0) {
+		fill = '';
+	}
+	return Array(N).fill().map(() => Array(N).fill(fill))
 }
 
 const fashionShow = () => {
@@ -63,7 +69,7 @@ const fashionShow = () => {
 		let fashionPoints = 0;
 
 		// Create the Matrix
-		let matrix = Array(N).fill().map(() => Array(N).fill('.'))
+		let matrix = createMatrix(N, '.');
 		let freeRows = fillRange(0, N - 1);
 		let freeCols = fillRange(0, N - 1);
 		let freePositiveDiag = fillRange(0, (2 * N) - 2);
@@ -98,10 +104,8 @@ const fashionShow = () => {
 		}
 		for (let R = 0; R < N; R++) {
 			for (let C = 0; C < N; C++) {
-				if (!freeDiag.hasOwnProperty(R + C)) {
-					freeDiag[R + C] = [
-						[R, C]
-					];
+				if (!freeDiag[R + C]) {
+					freeDiag[R + C] = [[R, C]];
 				} else {
 					const arr = freeDiag[R + C]
 					arr.push([R, C]);
