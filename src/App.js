@@ -1,33 +1,25 @@
 const fs = require("fs");
-const lines = fs.readFileSync("./inputs/D-small-practice.in", "utf8").split("\n");
+const lines = fs.readFileSync("./inputs/D-large-practice.in", "utf8").split("\n");
 const outputFilePath = './output.txt'
 const numberOfCases = parseInt(lines.shift());
 
-const fillRange = (start, end) => {
-	return Array(end - start + 1).fill().map((_, index) => start + index);
-};
+const fillRange = (start, end) => Array(end - start + 1).fill().map((_, index) => start + index);
 
-function deleteOutputFile() {
+const deleteOutputFile = () => {
 	fs.unlink(outputFilePath, (err) => {
 		if (err) throw `Run the program again ${err}`;
 	});
 }
 
-function removeElemFromArray(array, elem) {
-	return array.splice(array.indexOf(elem), 1);
-}
+const removeElemFromArray = (array, elem) => array.splice(array.indexOf(elem), 1);
 
-function zip(a, b) {
-	let arr = [];
-	for (let key in a) arr.push([a[key], b[key]]);
-	return arr;
-}
+const zip = (a, b) => a.map((key, i) => [key, b[i]])
 
-function printMatrix(matrix) {
+const printMatrix = (matrix) => {
 	matrix.map((row, i) => console.log(`${i}\t${row.toString()}`));
 }
 
-function orderByLength(matrix) {
+const orderByLength = (matrix) => {
 	const len = matrix.length;
 	let indices = fillRange(0, len - 1);
 	return indices.sort(function (a, b) {
@@ -48,16 +40,9 @@ function orderByLength(matrix) {
 	});
 }
 
-function containsSubArray(array, subArray) {
-	return array.some(elem => elem.toString() === subArray.toString())
-}
+const containsSubArray = (array, subArray) => array.some(elem => elem.toString() === subArray.toString());
 
-function createMatrix(N, fill) {
-	if (fill.length === 0) {
-		fill = '';
-	}
-	return Array(N).fill().map(() => Array(N).fill(fill))
-}
+const createMatrix = (N, fill = '') => Array(N).fill().map(() => Array(N).fill(fill));
 
 const fashionShow = () => {
 	deleteOutputFile();
@@ -105,7 +90,9 @@ const fashionShow = () => {
 		for (let R = 0; R < N; R++) {
 			for (let C = 0; C < N; C++) {
 				if (!freeDiag[R + C]) {
-					freeDiag[R + C] = [[R, C]];
+					freeDiag[R + C] = [
+						[R, C]
+					];
 				} else {
 					const arr = freeDiag[R + C]
 					arr.push([R, C]);
